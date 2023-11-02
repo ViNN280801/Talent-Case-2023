@@ -5,7 +5,7 @@ call(['py', 'inst_dependencies.py'])
 import json
 
 
-def getData(filename: str) -> list:
+def getSentencesFromJSONDataset(filename: str) -> list:
     """
     Extracts sentences from the dataset represented as a JSON file.
 
