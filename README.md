@@ -41,3 +41,120 @@
 #### Ограничение
 
 Необходимо использовать исключительно алгоритмический подход. Применение нейронных сетей и готовых моделей машинного обучения запрещено.
+
+## First method
+
+### Description
+
+The essense of this method - comparing symbols. Implementation of this idea consists of some simple operations:
+
+1. Get each sentece with it ID from the JSON dataset
+2. Convert each symbol of the string to lowercase
+3. Erase whitespaces, all punctuation, special symbols and other non-letter symbols
+4. Compare each resulting symbol sequenece with each, to find the same sequences
+5. Writing IDs of the same by meaning sentences
+
+### Usage Example
+
+```bash
+py main.py
+```
+
+Results:
+
+```
+re is already installed
+json is already installed
+Enter name of the file >> sample.json
+The same by meaning sentences:
+[2, 15, 150]
+[3, 266]
+[4, 13]
+...
+[305, 315]
+[306, 412]
+[307, 344]
+[328, 379]
+[338, 347]
+[350, 374]
+[388, 405]
+```
+
+Let's see [2, 15, 150] sentences from the dataset:
+
+```json
+[
+  {
+    "id": 2,
+    "text": "Почему она так со мной поступает?"
+  },
+  {
+    "id": 15,
+    "text": "Почему она так с ней поступает?"
+  },
+  {
+    "id": 150,
+    "text": "Почему он так со мной поступает?"
+  }
+]
+```
+
+Or [328, 379]:
+
+```json
+[
+  {
+    "id": 328,
+    "text": "Я знаю, что это для тебя важно."
+  },
+  {
+    "id": 379,
+    "text": "Я знаю, что для тебя это важно."
+  }
+]
+```
+
+### Advantages
+
+1. Fast finding the rewrites by shuffle words in the sentence
+
+### Disadvantages
+
+1. Bad working on random sequences
+
+#### Exact example of disadvantage
+
+Assume, that we can put on input these two sentences
+
+```
+Что ещё ты можешь рассказать нам о Томе?
+емтаьатожекатеыорщммтнзаёоьссшоч
+```
+
+In point of view of symbol sequence equality - these two sentences are equal. But there is no any meaning on the second sentence in point of view of human. For human this is just symbol sequence.
+
+Let's check them on the custom dataset (`custom_dataset.json`):
+
+```json
+[
+  {
+    "id": 1,
+    "text": "Привет, мир!"
+  },
+  {
+    "id": 2,
+    "text": "ирП! ,теривм"
+  }
+]
+```
+
+```bash
+py main.py
+```
+
+Getting the result:
+
+```
+The same by meaning sentences:
+[1, 2]
+```
