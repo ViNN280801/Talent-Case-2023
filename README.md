@@ -127,8 +127,8 @@ Or [328, 379]:
 Assume, that we can put on input these two sentences
 
 ```
-Что ещё ты можешь рассказать нам о Томе?
-емтаьатожекатеыорщммтнзаёоьссшоч
+Привет, мир!
+ирП! ,теривм
 ```
 
 In point of view of symbol sequence equality - these two sentences are equal. But there is no any meaning on the second sentence in point of view of human. For human this is just symbol sequence.
