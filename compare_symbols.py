@@ -2,9 +2,8 @@
 from subprocess import call
 call(['py', 'inst_dependencies.py'])
 
-
-import re
-import json
+# Including regex and json
+import re, json
 
 
 STOP_WORDS = {
@@ -51,7 +50,7 @@ def getSentencesFromJSONDataset(filename: str) -> list:
     return result
 
 
-def deleteNonLettersFromText(text):
+def deleteNonLettersFromText(text: str) -> str:
     """
     Remove all non-letter and additional special characters from a text.
 
@@ -61,11 +60,13 @@ def deleteNonLettersFromText(text):
     Returns:
         Text with non-letter and additional special characters removed.
     """
-    # Define the regular expression to match non-letter and special characters
-    pattern = r'[^а-яА-Я]'
-    cleaned_text = re.sub(pattern, ' ', text)
-    cleaned_text = ' '.join(cleaned_text.split()).lower()
-    return cleaned_text
+    # 1) Finding tokens by specified pattern and separate (pattern is sequence of Russian letters)
+    # ' ' as a 2nd param means that it's a replacement string, it replaces any char
+    # matched by regex with a whitespace
+    # 2) Splitting `text` into words using whitespaces as the separator
+    # 3) `' '.join()` makes a string from the iterable object - list in this case
+    # 4) `lower()` method lowercasing all symbols
+    return (' '.join(re.sub(r'[^А-Яа-я$]', ' ', text).split())).lower()
 
 
 def deleteStopWordsFromSentences(sentences: list) -> list:
@@ -76,19 +77,19 @@ def deleteStopWordsFromSentences(sentences: list) -> list:
         sentences (list): List of sentences.
 
     Returns:
-        List of sentences with stop words removed.
+        List of sentences with removed stop words.
     """
     cleaned_sentences = []
 
     for sentence in sentences:
         text = sentence['text']
         words = text.split()
-        filtered_words = [
-            word for word in words if word.lower() not in STOP_WORDS]
-        cleaned_text = ' '.join(filtered_words)
+
+        # Creating dictionary with ID and sentence
+        # where sentence will be without stop words
         cleaned_sentence = {
             'id': sentence['id'],
-            'text': cleaned_text
+            'text': ' '.join([word for word in words if word not in STOP_WORDS])
         }
         cleaned_sentences.append(cleaned_sentence)
 
@@ -117,7 +118,7 @@ def findEqualSentences(sentences: list) -> list:
     # Iterate through the list of sentence sets
     for i, (id1, set1) in enumerate(sentence_sets):
         # Create a list to store IDs of sentences with equal sets
-        equal_ids = [id1]
+        equal_sentences_id = [id1]
 
         for j, (id2, set2) in enumerate(sentence_sets):
             # Skip comparing the same set
@@ -126,26 +127,24 @@ def findEqualSentences(sentences: list) -> list:
 
             # Compare sets
             if set1 == set2:
-                equal_ids.append(id2)
+                equal_sentences_id.append(id2)
 
         # Sort the list of IDs to ensure a consistent order
-        equal_ids.sort()
+        equal_sentences_id.sort()
 
         # Append the list of equal IDs to the result if it's not already there
-        if equal_ids not in equal_sets:
-            equal_sets.append(equal_ids)
+        if equal_sentences_id not in equal_sets:
+            equal_sets.append(equal_sentences_id)
 
     return equal_sets
 
 
 def runFirstMethod():
-    sameSentences = findEqualSentences(getSentencesFromJSONDataset(
-        str(input('Enter name of the file >> '))))
+    sameSentences = findEqualSentences(getSentencesFromJSONDataset(str(input('Enter name of the file >> '))))
 
     # Check if all sublists have only a single element
     if all(len(equal_group) == 1 for equal_group in sameSentences):
         print('First method to find identical sentences by meaning failed')
     else:
         print('The same by meaning sentences:')
-        [print(equal_group)
-         for equal_group in sameSentences if len(equal_group) != 1]
+        [print(equal_group) for equal_group in sameSentences if len(equal_group) != 1]
