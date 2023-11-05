@@ -7,7 +7,7 @@ BLUE = '\033[94m'
 RESET = '\033[0m\033[1m'
 
 # List of packages to check and install if not found
-packages_to_check = ['re', 'json']
+packages_to_check = ['re', 'json', 'time', 'psutil']
 
 for package in packages_to_check:
     try:

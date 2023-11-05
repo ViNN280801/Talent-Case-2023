@@ -139,8 +139,8 @@ def findEqualSentences(sentences: list) -> list:
     return equal_sets
 
 
-def runFirstMethod():
-    sameSentences = findEqualSentences(getSentencesFromJSONDataset(str(input('Enter name of the file >> '))))
+def runFirstMethod(filename: str) -> None:
+    sameSentences = findEqualSentences(getSentencesFromJSONDataset(filename))
 
     # Check if all sublists have only a single element
     if all(len(equal_group) == 1 for equal_group in sameSentences):
