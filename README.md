@@ -80,6 +80,12 @@ The same by meaning sentences:
 [388, 405]
 ```
 
+Updated output:
+
+<img src="imgs/1.png">
+
+<img src="imgs/2.png">
+
 Let's see [2, 15, 150] sentences from the dataset:
 
 ```json
