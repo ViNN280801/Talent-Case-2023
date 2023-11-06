@@ -140,11 +140,18 @@ def findEqualSentences(sentences: list) -> list:
 
 
 def runFirstMethod(filename: str) -> None:
-    sameSentences = findEqualSentences(getSentencesFromJSONDataset(filename))
+    sameSentencesText = getSentencesFromJSONDataset(filename)
+    sameSentencesIDs = findEqualSentences(getSentencesFromJSONDataset(filename))
 
     # Check if all sublists have only a single element
-    if all(len(equal_group) == 1 for equal_group in sameSentences):
+    if all(len(equal_group) == 1 for equal_group in sameSentencesIDs):
         print('First method to find identical sentences by meaning failed')
     else:
         print('The same by meaning sentences:')
-        [print(equal_group) for equal_group in sameSentences if len(equal_group) != 1]
+        for eq_group in sameSentencesIDs:
+            if len(eq_group) != 1:
+                print(eq_group, end=': ')
+                sentence = [x for x in sameSentencesText if x['id'] in eq_group]
+                print()
+                print("\n".join(f"{sentence['id']} - {sentence['text']}" for sentence in sentence))
+        
